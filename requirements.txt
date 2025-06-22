@@ -1,0 +1,6 @@
+tushare
+pandas
+numpy
+matplotlib
+scikit-learn
+ta-lib
