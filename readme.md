@@ -1,5 +1,4 @@
-# 基于机器学习最优路径回溯的量化交易信号
-# ML-OptPathQTS：Machine Learning-based Optimal Path Backtracing Quantitative Trading Signals
+# 基于机器学习最优路径回溯的量化交易信号 / ML-OptPathQTS：Machine Learning-based Optimal Path Backtracing Quantitative Trading Signals
 
 ## 项目简介 / Project Introduction
 
