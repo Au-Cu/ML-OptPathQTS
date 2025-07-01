@@ -2,14 +2,13 @@
 
 ## 项目简介 / Project Introduction
 
-基于机器学习的最优路径回溯量化交易信号系统。  
-该模型以“日”为交易频率，采用贪心算法对历史股票数据进行最优路径回溯，标记出历史最优买卖点。以多项技术指标（如 MA、KDJ、RSI、BOLL、MACD）为自变量，最优买卖信号为因变量，训练随机森林模型，反推出最佳买卖点时的指标共振特征。  
-最终将训练好的模型应用于独立的回测数据集，自动生成日线买卖交易信号，实现实盘级别回测及收益可视化。
+基于机器学习和模拟退火的最优路径回溯量化交易信号系统。  
+该模型以“日”为交易频率，采用贪心算法对历史股票数据进行最优路径回溯，标记出历史最优买卖点。以多项技术指标（如 MA、KDJ、RSI、BOLL、MACD）为自变量，最优买卖信号为因变量，训练随机森林模型，反推出最佳买卖点时的指标共振特征。其中，模拟退火算法会使得模型可以自动搜索最优训练区间，以最好的“学习资料”得出最佳的“成绩”。最终将训练好的模型应用于独立的回测数据集，自动生成日线买卖交易信号，实现实盘级别回测及收益可视化。
 
 **A Machine Learning-Based Optimal Path Backtracing Quantitative Trading Signal System.**  
-This model operates on a daily trading frequency, utilizing a greedy algorithm to perform optimal path backtracing on historical stock data and label the optimal historical buy/sell points.  
-Multiple technical indicators (such as MA, KDJ, RSI, BOLL, MACD) are used as independent variables, and the optimal buy/sell signals are used as dependent variables to train a Random Forest model.  
-The trained model is then applied to an independent backtesting dataset to automatically generate daily trading signals, enabling live-level backtesting and performance visualization.
+This model operates on a daily trading frequency, employing a greedy algorithm to retrospectively identify the optimal trading path in historical stock data and label the most profitable buy and sell points. Using a range of technical indicators (such as MA, KDJ, RSI, BOLL, and MACD) as input features and the optimal trading signals as target labels, a Random Forest model is trained to learn the characteristic patterns of indicator convergence that correspond to ideal trading opportunities.
+
+A Simulated Annealing algorithm is integrated into the system to automatically search for the most effective training interval, ensuring the model learns from the most informative data and thereby achieves the best possible performance. The trained model is then applied to an independent backtesting dataset to generate daily trading signals, enabling realistic backtesting and visualization of investment returns.
 
 ---
 
@@ -17,8 +16,9 @@ The trained model is then applied to an independent backtesting dataset to autom
 - 🧠 贪心算法标注最优买卖点（Greedy Algorithm for Optimal Trade Points）
 - 🌲 随机森林反推交易信号（Random Forest Signal Prediction）
 - 📊 完整技术指标：MA, BOLL, MACD, RSI, KDJ
+- 🔄 训练集与回测集分离，避免“上帝视角”数据泄露
+- 🧊 模拟退火搜索训练区间，支持快速与精准两种模式（用户可选）
 - 📈 策略收益曲线与股价曲线双轴可视化
-- 🔄 训练集与回测集分离，避免“上帝视角”
 
 ---
 
@@ -38,34 +38,28 @@ Moreover, realistic trading costs such as brokerage commissions, stamp duty, and
 
 
 3. **模型可移植性较差（Limited Model Portability）：**  
-模型虽对外暴露了交易标的与账户资金接口，但当前版本已固定标的及初始资金。不同股票需要重新指定训练数据区间，且当前训练/回测区间也为手动固定，无法根据实际时间动态调整或更新。
+模型虽对外暴露了交易标的与账户资金接口，但当前版本已固定标的及初始资金，且当前训练/回测区间也为手动固定，无法根据实际时间动态调整或更新。
 
 Although the model exposes interfaces for specifying the trading asset and account balance, the current version fixes these parameters (China Bank stock, 1 million CNY initial cash).  
-To apply this model to different assets or time frames, the user must manually redefine the training data range and retrain the model accordingly.  
 Additionally, the training and backtesting periods are hard-coded and cannot yet dynamically adjust based on the real trading date or market updates.
 
 ---
 
 ## 后续改进方向 / Future Improvements
 
-1. **引入区间优化算法（Training Data Range Optimization）：**  
-计划采用梯度下降、模拟退火等算法，针对不同股票及时间自动寻找使回测收益率最优的训练数据区间。
-
-In the future, algorithms such as gradient descent and simulated annealing will be introduced to automatically search for the most suitable training data period that maximizes the backtest yield for each target stock.
-
-2. **引入强化学习（Reinforcement Learning）：**  
+1. **引入强化学习（Reinforcement Learning）：**  
 结合每日真实涨跌幅与昨日模型预测结果进行偏差反馈，自动调整模型参数，提升模型自适应性。
 
 Reinforcement learning techniques will be adopted to provide reward and penalty signals based on the deviation between the model’s daily prediction and the stock’s actual price movement. This mechanism aims to enable automatic, real-time model adjustment and optimization for improved adaptability to changing market conditions.
 
 
-3. **信号强度细分（Signal Strength Quantification）：**  
+2. **信号强度细分（Signal Strength Quantification）：**  
 将在模型输出中引入买卖信号强度指标（概率或置信区间），正负决定买卖方向，绝对值决定买卖强弱，并根据信号强弱动态调整仓位比例。
 
 The model will output not only buy/sell decisions but also the confidence level or probability of each signal. Positive values will represent a buy signal, negative values a sell signal, and the absolute magnitude of these values will indicate the strength of the signal.  
 The trading volume will be dynamically adjusted based on the signal's strength rather than being fixed at one-third of available cash or holdings.
 
-4. **模块化与自动化（Modularization & Automation）：**  
+3. **模块化与自动化（Modularization & Automation）：**  
 开放标的与资金接口，自动爬取当日尾盘数据，计算当日技术指标，微调训练区间，实时训练与推理，最终给出具体买卖建议（含买卖量），供用户尾盘竞价参考。
 
 The system will be fully modularized with open interfaces for trading symbols and account balances.  
@@ -88,4 +82,9 @@ This project is still under prototype development. Contributions and feedback ar
 
 ```bash
 pip install -r requirements.txt
-python main.py
+# 示例：快速模式运行
+python main.py 1
+
+# 示例：精准模式运行
+python main.py 2
+
